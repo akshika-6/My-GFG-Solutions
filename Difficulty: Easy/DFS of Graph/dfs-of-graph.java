@@ -2,25 +2,22 @@ class Solution {
     // Function to return a list containing the DFS traversal of the graph.
     public ArrayList<Integer> dfs(ArrayList<ArrayList<Integer>> adj) {
         // Code here
-        int V = adj.size(); // number of vertices
-        boolean[] visited = new boolean[V]; // visited array
-        ArrayList<Integer> result = new ArrayList<>(); // store traversal
-        
-        // start DFS from node 0
-        dfsUtil(0, adj, visited, result);
-        
-        return result;
+        int n=adj.size();
+        boolean[] visited=new boolean[n];
+        ArrayList<Integer> ans=new ArrayList<>();
+        for(int i=0;i<n;i++){
+            if(!visited[i]){
+                dfs1(i,visited,ans,adj);
+            }
+        }
+        return ans;
     }
-    
-    // Helper recursive function
-    private void dfsUtil(int node, ArrayList<ArrayList<Integer>> adj, boolean[] visited, ArrayList<Integer> result) {
-        visited[node] = true; // mark as visited
-        result.add(node);     // add to traversal
-        
-        // explore all unvisited neighbors
-        for (int neighbor : adj.get(node)) {
-            if (!visited[neighbor]) {
-                dfsUtil(neighbor, adj, visited, result);
+    public static void dfs1(int node,boolean[] visited,ArrayList<Integer> ans,ArrayList<ArrayList<Integer>> adj){
+        visited[node]=true;
+        ans.add(node);
+        for(int a:adj.get(node)){
+            if(!visited[a]){
+                dfs1(a,visited,ans,adj);
             }
         }
     }
