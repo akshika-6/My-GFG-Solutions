@@ -1,28 +1,18 @@
 class Solution {
-    public static void dfs(int node,ArrayList<ArrayList<Integer>> ls,boolean[] visited,Stack<Integer> st){
-        visited[node] = true;
-        for(int d:ls.get(node)){
-            if(!visited[d]){
-                dfs(d,ls,visited,st);
-            }
-        }
-        st.push(node);
-    }
-    
     public static ArrayList<Integer> topoSort(int V, int[][] edges) {
         // code here
-        ArrayList<ArrayList<Integer>> ls = new ArrayList<>();
+        List<List<Integer>> graph=new ArrayList<>();
         for(int i=0;i<V;i++){
-            ls.add(new ArrayList<>());
+            graph.add(new ArrayList<>());
         }
-        for(int[] d:edges){
-            ls.get(d[0]).add(d[1]);
+        for(int[] e:edges){
+            graph.get(e[0]).add(e[1]);
         }
-        Stack<Integer> st=new Stack<>();
         boolean[] visited = new boolean[V];
+        Stack<Integer> st=new Stack<>();
         for(int i=0;i<V;i++){
             if(!visited[i]){
-                dfs(i,ls,visited,st);
+                dfs(i,visited,graph,st);
             }
         }
         ArrayList<Integer> ans=new ArrayList<>();
@@ -30,5 +20,14 @@ class Solution {
             ans.add(st.pop());
         }
         return ans;
+    }
+    public static void dfs(int node,boolean[] visited,List<List<Integer>> graph,Stack<Integer> st){
+        visited[node]=true;
+        for(int nei:graph.get(node)){
+            if(!visited[nei]){
+                dfs(nei,visited,graph,st);
+            }
+        }
+        st.push(node);
     }
 }
