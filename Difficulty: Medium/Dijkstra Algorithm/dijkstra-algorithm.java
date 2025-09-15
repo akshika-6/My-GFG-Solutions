@@ -1,20 +1,21 @@
 class Pair {
-    int node, weight;
-    Pair(int n, int w) {
+    int node, dist;
+    Pair(int n, int d) {
         node = n;
-        weight = w;
+        dist = d;
     }
 }
 class Solution {
     public int[] dijkstra(int V, int[][] edges, int src) {
         // code here
+        // Step 1: Build adjacency list
         ArrayList<ArrayList<Pair>> adj = new ArrayList<>();
         for (int i = 0; i < V; i++) adj.add(new ArrayList<>());
 
         for (int[] e : edges) {
             int u = e[0], v = e[1], w = e[2];
             adj.get(u).add(new Pair(v, w));
-            adj.get(v).add(new Pair(u, w)); // undirected graph
+            adj.get(v).add(new Pair(u, w)); // undirected
         }
 
         // Step 2: Distance array
@@ -22,23 +23,29 @@ class Solution {
         Arrays.fill(dist, Integer.MAX_VALUE);
         dist[src] = 0;
 
-        // Step 3: Min-heap (distance, node)
-        PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> a.weight - b.weight);
-        pq.add(new Pair(src, 0));
+        // Step 3: TreeSet instead of PriorityQueue
+        TreeSet<Pair> set = new TreeSet<>((a, b) -> {
+            if (a.dist != b.dist) return a.dist - b.dist;
+            return a.node - b.node; // tie-breaker
+        });
 
-        // Step 4: Process queue
-        while (!pq.isEmpty()) {
-            Pair cur = pq.poll();
+        set.add(new Pair(src, 0));
+
+        // Step 4: Process TreeSet
+        while (!set.isEmpty()) {
+            Pair cur = set.pollFirst(); // get and remove smallest
             int u = cur.node;
-            int d = cur.weight;
-
-            if (d > dist[u]) continue; // skip outdated entry
 
             for (Pair nei : adj.get(u)) {
-                int v = nei.node, wt = nei.weight;
-                if (dist[v] > dist[u] + wt) {
+                int v = nei.node, wt = nei.dist; // wt is edge weight
+
+                if (dist[u] + wt < dist[v]) {
+                    // Remove old entry if present
+                    set.remove(new Pair(v, dist[v]));
+
                     dist[v] = dist[u] + wt;
-                    pq.add(new Pair(v, dist[v]));
+
+                    set.add(new Pair(v, dist[v]));
                 }
             }
         }
