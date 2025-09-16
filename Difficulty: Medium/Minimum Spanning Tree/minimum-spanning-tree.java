@@ -32,16 +32,16 @@ class UnionFind{
 class Solution {
     public int spanningTree(int V, int[][] edges) {
         // code here
-        UnionFind uf = new UnionFind(V);
-        int count=0;
-        int res =0;
+        UnionFind uf=new UnionFind(V);
+        int c=0;
+        int res=0;
         Arrays.sort(edges,(a,b) -> a[2]-b[2]);
-        for(int[] arr:edges){
-            if(uf.union(arr[0],arr[1])==true){
-                count++;
-                res += arr[2];
-                if(count == V-1) break;
-        }
+        for(int[] i:edges){
+            if(uf.union(i[0],i[1]) == true){
+                c++;
+                res+=i[2];
+                if(c == V-1) break;
+            }
         }
         return res;
     }
