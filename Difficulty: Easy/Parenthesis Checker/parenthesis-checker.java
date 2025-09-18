@@ -1,27 +1,19 @@
 class Solution {
     public boolean isBalanced(String s) {
         // code here
-        ArrayDeque<Character> stack=new ArrayDeque<>();
-        for(int i=0;i<s.length();i++){
-            char ch=s.charAt(i);
-            if(ch== '(' || ch== '[' || ch== '{'){
-                stack.push(ch);
-            }
-            else{
-                if(stack.isEmpty()){
-                    return false;
-                }
-                char top=stack.peek();
-                if(ch==')' && top=='(' ||
-                ch==']' && top=='['||
-                ch=='}' && top=='{'){
-                    stack.pop();
-                }
-                else{
-                    return false;
-                }
+        ArrayDeque<Character> st=new ArrayDeque<>();
+        for(char ch:s.toCharArray()){
+            if(ch == '{' || ch == '(' || ch == '['){
+                st.push(ch);
+            } else {
+                if(st.isEmpty()) return false;
+                char top = st.pop();
+                if((ch == '}' && top != '{')||
+                (ch == ')' && top != '(')||
+                (ch == ']' && top != '['))
+                return false;
             }
         }
-        return stack.isEmpty();
+        return st.isEmpty();
     }
 }
