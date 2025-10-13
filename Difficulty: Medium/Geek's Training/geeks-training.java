@@ -3,36 +3,27 @@
 class Solution {
     public int maximumPoints(int arr[][]) {
         // code here
-        int n=arr.length;
-        int[][] memo = new int[n][4];
-        for (int[] row : memo) Arrays.fill(row, -1);
-        return solve(n - 1, 3, arr, memo);
-    }
-
-    private int solve(int day, int last, int[][] arr, int[][] memo) {
-        // Base case: first day
-        if (day == 0) {
-            int best = 0;
-            for (int task = 0; task < 3; task++) {
-                if (task != last) {
-                    best = Math.max(best, arr[0][task]);
+        int m=arr.length;
+        int n=arr[0].length;
+        int[][] d=new int[m][n];
+        for(int j=0;j<n;j++){
+            d[0][j]=arr[0][j];
+        }
+        for(int i=1;i<m;i++){
+            for(int j=0;j<n;j++){
+                int max=0;
+                for(int k=0;k<=2;k++){
+                    if(j != k){
+                        max=Math.max(max,d[i-1][k]);
+                    }
                 }
-            }
-            return best;
-        }
-
-        // Already computed?
-        if (memo[day][last] != -1) return memo[day][last];
-
-        int best = 0;
-        // Try all activities except the one done yesterday
-        for (int task = 0; task < 3; task++) {
-            if (task != last) {
-                int points = arr[day][task] + solve(day - 1, task, arr, memo);
-                best = Math.max(best, points);
+                d[i][j]=max+arr[i][j];
             }
         }
-
-        return memo[day][last] = best;
+        int max=0;
+        for(int j=0;j<n;j++){
+            max=Math.max(max,d[m-1][j]);
+        }
+        return max;
     }
 }
