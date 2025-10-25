@@ -1,53 +1,47 @@
 /*
-class Node
-{
+class Node {
     int data;
     Node left, right;
 
-    public Node(int d)
+    public Node(int val)
     {
-        data = d;
+        data = val;
         left = right = null;
     }
 }
-
 */
+
 class Solution {
-    // Function to return a list of integers denoting the node
-    // values of both the BST in a sorted order.
+    
     public ArrayList<Integer> merge(Node root1, Node root2) {
-        // Write your code here
-        ArrayList<Integer> list1 = new ArrayList<>();
-        ArrayList<Integer> list2 = new ArrayList<>();
-
-        inorder(root1, list1);
-        inorder(root2, list2);
-
-        return mergeSortedLists(list1, list2);
-    }
-
-    private void inorder(Node root, ArrayList<Integer> list) {
-        if (root == null) return;
-        inorder(root.left, list);
-        list.add(root.data);
-        inorder(root.right, list);
-    }
-
-    private ArrayList<Integer> mergeSortedLists(List<Integer> l1, List<Integer> l2) {
-    ArrayList<Integer> merged = new ArrayList<>();
-    int i = 0, j = 0;
-
-    while (i < l1.size() && j < l2.size()) {
-        if (l1.get(i) <= l2.get(j)) {
-            merged.add(l1.get(i++));
-        } else {
-            merged.add(l2.get(j++));
+        // code here
+        Stack<Node> s1 = new Stack<>();
+        Stack<Node> s2 = new Stack<>();
+        ArrayList<Integer> result = new ArrayList<>();
+        
+        while (root1 != null || root2 != null || !s1.isEmpty() || !s2.isEmpty()) {
+            // Push left children to stack 1
+            while (root1 != null) {
+                s1.push(root1);
+                root1 = root1.left;
+            }
+            // Push left children to stack 2
+            while (root2 != null) {
+                s2.push(root2);
+                root2 = root2.left;
+            }
+            
+            if (s2.isEmpty() || (!s1.isEmpty() && s1.peek().data <= s2.peek().data)) {
+                root1 = s1.pop();
+                result.add(root1.data);
+                root1 = root1.right;
+            } else {
+                root2 = s2.pop();
+                result.add(root2.data);
+                root2 = root2.right;
+            }
         }
-    }
-
-    while (i < l1.size()) merged.add(l1.get(i++));
-    while (j < l2.size()) merged.add(l2.get(j++));
-
-    return merged;
+        
+        return result;
     }
 }
